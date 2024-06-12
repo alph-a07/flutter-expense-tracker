@@ -84,82 +84,128 @@ class _NewExpenseState extends State<NewExpense> {
     // When a mobile device's keyboard is visible viewInsets.bottom corresponds to the top of the keyboard.
     final keyboardSpace = MediaQuery.of(context).viewInsets.bottom;
 
-    return SingleChildScrollView(
-      child: Padding(
-        padding: EdgeInsets.fromLTRB(16, 16, 16, 16 + keyboardSpace),
-        child: Column(
-          children: [
-            TextField(
-              maxLength: 50,
-              autofocus: true,
-              decoration: const InputDecoration(label: Text('Title')),
-              controller: _titleController,
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      label: Text('Amount'),
-                      prefixText: '₹ ',
-                    ),
-                    controller: _amountController,
-                  ),
-                ),
-                const SizedBox(
-                  width: 16,
-                ),
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        _selectedDate == null
-                            ? 'Select Date'
-                            : dateFormatter.format(_selectedDate!),
-                      ),
-                      IconButton(
-                        onPressed: _openDatePicker,
-                        icon: const Icon(Icons.calendar_month_rounded),
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            Row(
-              children: [
-                DropdownButton(
-                    value: _selectedCategory,
-                    items: Category.values
-                        .map((category) => DropdownMenuItem(
-                              value: category,
-                              child: Text(category.name.toUpperCase()),
-                            ))
-                        .toList(),
-                    onChanged: (val) {
-                      if (val == null) return;
-                      setState(() {
-                        _selectedCategory = val;
-                      });
-                    }),
-                const Spacer(),
-                TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text('Cancel')),
-                ElevatedButton(onPressed: _submitExpense, child: const Text('Add expense')),
-              ],
-            )
-          ],
-        ),
+    final titleWidget = Expanded(
+      child: TextField(
+        maxLength: 50,
+        autofocus: true,
+        decoration: const InputDecoration(label: Text('Title')),
+        controller: _titleController,
       ),
     );
+
+    final amountWidget = Expanded(
+      child: TextField(
+        keyboardType: TextInputType.number,
+        decoration: const InputDecoration(
+          label: Text('Amount'),
+          prefixText: '₹ ',
+        ),
+        controller: _amountController,
+      ),
+    );
+
+    final categoryWidget = DropdownButton(
+        value: _selectedCategory,
+        items: Category.values
+            .map((category) => DropdownMenuItem(
+                  value: category,
+                  child: Text(category.name.toUpperCase()),
+                ))
+            .toList(),
+        onChanged: (val) {
+          if (val == null) return;
+          setState(() {
+            _selectedCategory = val;
+          });
+        });
+
+    final dateWidget = Expanded(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            _selectedDate == null ? 'Select Date' : dateFormatter.format(_selectedDate!),
+          ),
+          IconButton(
+            onPressed: _openDatePicker,
+            icon: const Icon(Icons.calendar_month_rounded),
+          ),
+        ],
+      ),
+    );
+
+    return LayoutBuilder(builder: (ctx, constraints) {
+      final width = constraints.maxWidth;
+
+      return SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(16, 16, 16, 16 + keyboardSpace),
+          child: Column(
+            children: [
+              if (width >= 600)
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    titleWidget,
+                    const SizedBox(
+                      width: 24,
+                    ),
+                    amountWidget,
+                  ],
+                )
+              else
+                titleWidget,
+              if (width >= 600)
+                Row(
+                  children: [
+                    categoryWidget,
+                    const SizedBox(width: 24),
+                    dateWidget,
+                  ],
+                )
+              else
+                Row(
+                  children: [
+                    amountWidget,
+                    const SizedBox(
+                      width: 16,
+                    ),
+                    dateWidget,
+                  ],
+                ),
+              const SizedBox(
+                height: 16,
+              ),
+              if (width >= 600)
+                Row(
+                  children: [
+                    const Spacer(),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Cancel')),
+                    ElevatedButton(onPressed: _submitExpense, child: const Text('Add expense')),
+                  ],
+                )
+              else
+                Row(
+                  children: [
+                    categoryWidget,
+                    const Spacer(),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Cancel')),
+                    ElevatedButton(onPressed: _submitExpense, child: const Text('Add expense')),
+                  ],
+                )
+            ],
+          ),
+        ),
+      );
+    });
   }
 }
