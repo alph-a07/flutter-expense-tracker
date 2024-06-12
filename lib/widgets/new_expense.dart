@@ -86,11 +86,12 @@ class _NewExpenseState extends State<NewExpense> {
 
     return SingleChildScrollView(
       child: Padding(
-        padding: EdgeInsets.fromLTRB(16, 48, 16, 16 + keyboardSpace),
+        padding: EdgeInsets.fromLTRB(16, 16, 16, 16 + keyboardSpace),
         child: Column(
           children: [
             TextField(
               maxLength: 50,
+              autofocus: true,
               decoration: const InputDecoration(label: Text('Title')),
               controller: _titleController,
             ),
