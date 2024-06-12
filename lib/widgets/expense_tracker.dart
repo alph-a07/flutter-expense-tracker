@@ -68,13 +68,14 @@ class _ExpensesState extends State<Expenses> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+
     Widget mainContent = const Center(
       child: Text('No expenses found. Start adding some!'),
     );
 
     if (_registeredExpenses.isNotEmpty) {
-      mainContent = ExpensesList(
-          expenses: _registeredExpenses, removeExpense: _removeExpense);
+      mainContent = ExpensesList(expenses: _registeredExpenses, removeExpense: _removeExpense);
     }
 
     return Scaffold(
@@ -87,16 +88,29 @@ class _ExpensesState extends State<Expenses> {
           )
         ],
       ),
-      body: Column(
-        children: [
-          Chart(
-            expenses: _registeredExpenses,
-          ),
-          Expanded(
-            child: mainContent,
-          ),
-        ],
-      ),
+      body: width < 600
+          ? Column(
+              children: [
+                Chart(
+                  expenses: _registeredExpenses,
+                ),
+                Expanded(
+                  child: mainContent,
+                ),
+              ],
+            )
+          : Row(
+              children: [
+                Expanded(
+                  child: Chart(
+                    expenses: _registeredExpenses,
+                  ),
+                ),
+                Expanded(
+                  child: mainContent,
+                ),
+              ],
+            ),
       floatingActionButton: FloatingActionButton(
         onPressed: _openAddExpenseOverlay,
         child: const Icon(Icons.add),
