@@ -84,40 +84,38 @@ class _NewExpenseState extends State<NewExpense> {
     // When a mobile device's keyboard is visible viewInsets.bottom corresponds to the top of the keyboard.
     final keyboardSpace = MediaQuery.of(context).viewInsets.bottom;
 
-    final titleWidget = Expanded(
-      child: TextField(
-        maxLength: 50,
-        autofocus: true,
-        decoration: const InputDecoration(label: Text('Title')),
-        controller: _titleController,
-      ),
+    final titleWidget = TextField(
+      maxLength: 50,
+      autofocus: true,
+      decoration: const InputDecoration(label: Text('Title')),
+      controller: _titleController,
     );
 
-    final amountWidget = Expanded(
-      child: TextField(
-        keyboardType: TextInputType.number,
-        decoration: const InputDecoration(
-          label: Text('Amount'),
-          prefixText: '₹ ',
-        ),
-        controller: _amountController,
+    final amountWidget = TextField(
+      keyboardType: TextInputType.number,
+      decoration: const InputDecoration(
+        label: Text('Amount'),
+        prefixText: '₹ ',
       ),
+      controller: _amountController,
     );
 
-    final categoryWidget = DropdownButton(
-        value: _selectedCategory,
-        items: Category.values
-            .map((category) => DropdownMenuItem(
-                  value: category,
-                  child: Text(category.name.toUpperCase()),
-                ))
-            .toList(),
-        onChanged: (val) {
-          if (val == null) return;
-          setState(() {
-            _selectedCategory = val;
-          });
-        });
+    final categoryWidget = Expanded(
+      child: DropdownButton(
+          value: _selectedCategory,
+          items: Category.values
+              .map((category) => DropdownMenuItem(
+                    value: category,
+                    child: Text(category.name.toUpperCase()),
+                  ))
+              .toList(),
+          onChanged: (val) {
+            if (val == null) return;
+            setState(() {
+              _selectedCategory = val;
+            });
+          }),
+    );
 
     final dateWidget = Expanded(
       child: Row(
@@ -147,11 +145,11 @@ class _NewExpenseState extends State<NewExpense> {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    titleWidget,
+                    Expanded(child: titleWidget),
                     const SizedBox(
                       width: 24,
                     ),
-                    amountWidget,
+                    Expanded(child: amountWidget),
                   ],
                 )
               else
@@ -167,7 +165,7 @@ class _NewExpenseState extends State<NewExpense> {
               else
                 Row(
                   children: [
-                    amountWidget,
+                    Expanded(child: amountWidget),
                     const SizedBox(
                       width: 16,
                     ),
