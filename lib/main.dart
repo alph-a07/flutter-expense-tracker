@@ -2,8 +2,7 @@ import 'package:expense_tracker/widgets/expense_tracker.dart';
 import 'package:flutter/material.dart';
 
 // Global variables in Flutter are supposed to start with 'k'
-var kColorScheme =
-    ColorScheme.fromSeed(seedColor: const Color.fromARGB(100, 5, 200, 20));
+var kColorScheme = ColorScheme.fromSeed(seedColor: const Color.fromARGB(100, 5, 200, 20));
 
 var kDarkColorScheme = ColorScheme.fromSeed(
   seedColor: const Color.fromARGB(100, 17, 93, 24),
@@ -16,6 +15,7 @@ void main() {
   //     .then((_) {
   runApp(
     MaterialApp(
+      debugShowCheckedModeBanner: false,
       darkTheme: ThemeData.dark(useMaterial3: true).copyWith(
         colorScheme: kDarkColorScheme,
         appBarTheme: const AppBarTheme().copyWith(
